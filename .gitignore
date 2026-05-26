@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+*.pyo
+model/*.npy
+MNIST/*.npy
+.vscode/
