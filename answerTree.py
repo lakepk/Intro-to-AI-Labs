@@ -7,10 +7,10 @@ EPS = 1e-6
 # 超参数，分别为树的最大深度、熵的阈值、信息增益函数
 # TODO: You can change or add the hyperparameters here
 hyperparams = {
-    "depth": 2, 
-    "purity_bound": 1e-1, 
-    "gainfunc": "gain" 
-    }
+    "depth": 6, 
+    "purity_bound": 1, 
+    "gainfunc": "negginiDA" 
+    } # {6, 1, negginiDA} -> 0.5477971014492754
 
 def entropy(Y: np.ndarray):
     """
@@ -19,8 +19,9 @@ def entropy(Y: np.ndarray):
     @return: 熵
     """
     # TODO: YOUR CODE HERE
-    
-    raise NotImplementedError
+    _, cnt = np.unique(Y, return_counts=True)
+    p = cnt / Y.shape[0]
+    return -np.sum(p * np.log2(p + EPS))
 
 
 def gain(X: np.ndarray, Y: np.ndarray, idx: int):
@@ -34,9 +35,11 @@ def gain(X: np.ndarray, Y: np.ndarray, idx: int):
     feat = X[:, idx]
     ufeat, featcnt = np.unique(feat, return_counts=True)
     featp = featcnt / feat.shape[0]
-    ret = 0
     # TODO: YOUR CODE HERE
-    raise NotImplementedError
+    ret = entropy(Y)
+    for i, u in enumerate(ufeat):
+        mask = (feat == u)
+        ret -= featp[i] * entropy(Y[mask])
     return ret
 
 
@@ -118,7 +121,8 @@ def buildTree(X: np.ndarray, Y: np.ndarray, unused: List[int], depth: int, purit
     # print(prefixstr, f"label {root.label} numbers {u} count {ucnt}") #可用于debug
     # 当达到终止条件时，返回叶节点
     # TODO: YOUR CODE HERE
-    raise NotImplementedError
+    if depth <= 0 or entropy(Y) <= purity_bound or len(unused) == 0:
+        return root
     gains = [gainfunc(X, Y, i) for i in unused]
     idx = np.argmax(gains)
     root.featidx = unused[idx]
@@ -129,7 +133,9 @@ def buildTree(X: np.ndarray, Y: np.ndarray, unused: List[int], depth: int, purit
     # 按选择的属性划分样本集，递归构建决策树
     # 提示：可以使用prefixstr来打印决策树的结构
     # TODO: YOUR CODE HERE
-    raise NotImplementedError
+    for u in ufeat:
+        mask = (feat == u)
+        root.children[u] = buildTree(X[mask], Y[mask], unused, depth - 1, purity_bound, gainfunc, prefixstr + "  ")
     return root
 
 
