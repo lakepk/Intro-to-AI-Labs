@@ -14,7 +14,6 @@ from autograd.BaseGraph import Graph
 import __main__
 __main__.Conv2D = YourTraining2.Conv2D
 __main__.Flatten = YourTraining2.Flatten
-__main__.GlobalAvgPool = YourTraining2.GlobalAvgPool
 
 class NullModel:
 
@@ -87,8 +86,8 @@ class YourModel:
             self.graphs = data
         for g in self.graphs:
             g.eval()
-        # 检测是否为CNN（第一个节点有kernel_size属性）
-        self.is_cnn = hasattr(self.graphs[0][0], 'kernel_size')
+        # 检测是否为CNN（第一个节点有ks属性=conv kernel_size）
+        self.is_cnn = hasattr(self.graphs[0][0], 'ks')
 
     def __call__(self, figure):
         if figure.ndim == 2:

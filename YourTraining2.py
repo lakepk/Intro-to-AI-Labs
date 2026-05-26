@@ -11,9 +11,9 @@ TOTAL = 590
 PER_MODEL = TOTAL // 2
 
 lr_start = 2e-3; lr_end = 1e-4; wd2 = 1e-4
-batchsize = 512  # 大批量加速
+batchsize = 256  # batchsize=512导致收敛失败，改回256
 C1, C2, FC_DIM = 16, 32, 256  # 已验证架构
-n_aug = 8
+n_aug = 6  # 减少增强数换取更多epochs
 
 GLOBAL_MEAN = float(np.mean(mnist.trn_X))
 GLOBAL_STD = float(np.std(mnist.trn_X))
