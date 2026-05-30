@@ -4,3 +4,4 @@ __pycache__/
 model/*.npy
 MNIST/*.npy
 .vscode/
+__pycache__/

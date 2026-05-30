@@ -20,12 +20,12 @@ def aug_image(img_flat, strong=False, focus='both'):
     """focus: 'rotate'重旋转 / 'shift'重平移 / 'both'均衡"""
     img = img_flat.reshape(28, 28)
     if focus == 'rotate':
-        angle = np.random.uniform(-30 if strong else -15, 30 if strong else 15)
+        angle = np.random.uniform(-25 if strong else -12, 25 if strong else 12)
         img = rotate(img, angle, reshape=False)
         dx, dy = np.random.uniform(-1, 1, 2); img = shift(img, (dy, dx))
     elif focus == 'shift':
         angle = np.random.uniform(-8, 8); img = rotate(img, angle, reshape=False)
-        dx, dy = np.random.uniform(-5 if strong else -3, 5 if strong else 3, 2)
+        dx, dy = np.random.uniform(-4 if strong else -2, 4 if strong else 2, 2)
         img = shift(img, (dy, dx))
     else:
         angle = np.random.uniform(-20 if strong else -12, 20 if strong else 12)
